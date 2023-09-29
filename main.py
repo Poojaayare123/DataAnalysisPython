@@ -1,38 +1,51 @@
 import pandas as pd
-import csv
-import os
+import numpy as np
+import matplotlib.pyplot as plot
+import seaborn as sns
+import warnings
+
+from matplotlib import pyplot as plt
+
+warnings.filterwarnings("ignore", "is_categorical_dtype")
+warnings.filterwarnings("ignore", "use_inf_as_na")
+
+#------------------------------ 1- Extraction of Data using Pandas--------------------------------------------------------
 
 df = pd.read_csv(r'C:\Users\pc\Python_Diwali_Sales_Analysis-main\Diwali Sales Data.csv',
                  encoding='unicode_escape')  # encoding is imp
 
-print(df.shape)  # shape to know the df shape
+print(df.shape)                              # shape to know the df shape
 
-print(df.head(10))  # it will show only head 10 values
+print(df.head(10))                           # it will show only head 10 values
 
-# here last 2 columns having null values so will do cleaning
 
-print(df.info())
-# info used to check the columns datatype or null values
-# here status and unnamed were not used so to delete that will  drop column
-
-# drop unrelated/blank col
-df.drop(['Status', 'unnamed1'], axis=1, inplace=True)  # diff column name enlosed in one single list
-# axis ==is to delete whole column ---This parameter specifies whether to remove rows or columns. By default,
-# it is set to 0, which means rows are removed. If you want to remove columns, set it to 1. #inplace = This parameter
-# is a boolean value that determines whether to modify the original DataFrame in place. By default, it is set to False.
+#-------------------------------2 - Cleaning / Transforming data using Pandas---------------------------------------------------
 
 print(df.info())
+# Info() used to check the columns datatype or null values
+# In data last 2 columns having null values so will do cleaning
+# status and unnamed were not used so to delete that will drop column
 
-# to check null values =====.isnull() --it gives true /false
+# drop unrelated/blank columns
+df.drop(['Status', 'unnamed1'], axis=1, inplace=True)
+# diff column name enclosed in one single list
+# axis == This parameter specifies whether to remove rows or columns. By default,
+# 0=rows are removed
+# 1=columns are removed
+# inplace = It determines whether to modify the original DataFrame. By default, it is set to False.
+
+print(df.info())
+
+# to check null values .isnull() used, and it gives true /false
 # print(pd.isnull(df))
 
-# isnull only gives the true /false value to count that vlaues  will use sum
+# isnull() only gives the true /false value to count that values will use sum
 print(pd.isnull(df).sum())  # Here we got that Amount is having 12 null values
 
 print(df.shape)  # (11251, 13)
 
-# to delete null values== .dropna()
-df.dropna(inplace=True)  # becz of inplace = true main df will change
+# to delete null values .dropna() used
+df.dropna(inplace=True)  # because of inplace = true main df will change
 
 print(df.shape)  # (11239, 13)
 
@@ -40,19 +53,30 @@ print(df.shape)  # (11239, 13)
 # .astype('int') used
 df['Amount'] = df['Amount'].astype('int')
 
-# to check column datatype  ======== .dtypes
+# To check column datatype .dtypes used
 print(df['Amount'].dtypes)
 
-# to check the column of df======.columns
+# To check the column of df======.columns
 print(df.columns)
 
 # To rename the column name
 # df.rename(columns={'Marital_Status':'Shadi'})  #inplace did not use, so it will not save
 
-# describe() ===it returns description of dta in the Dataframe(i.e count,mean,std etc)
+# describe()-It returns description of dta in the Dataframe(i.e count,mean,std etc)
 print(df.describe())
 
-# to describe specific column
+# To describe specific column
 print(df[['Age', 'Orders', 'Amount']].describe())
 
-# ===============Exploratory Data Analysis==================================================================
+# ===============Exploratory Data Analysis using Seaborn and matplotlib ==================================================================
+
+# Gender
+# print(df.columns())
+
+# creating Countplot --It will count no of records by category(Gender)
+ax = sns.countplot(x='Gender', data=df)
+
+#To give labels to graph
+for bars in ax.containers:
+    ax.bar_label(bars)     # Due to this number will visible
+plot.show()                # It used to show graph
